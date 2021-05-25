@@ -6,10 +6,11 @@ nodeRegistration:
 localAPIEndpoint:
   advertiseAddress: "2001:8b0:c8f:e8b0::9"
 ---
+kind: ClusterConfiguration
+kubernetesVersion: v1.21.1
 apiServer:
   certSANs:
   - "fd5a:1111:1111::1"
-  - k8s-api.growse.com
   - "2001:8b0:c8f:e8b0::9" 
   - "192.168.2.9"
   extraArgs:
@@ -45,13 +46,13 @@ etcd:
 featureGates:
   IPv6DualStack: true
 imageRepository: k8s.gcr.io
-kind: ClusterConfiguration
-kubernetesVersion: v1.20.0
 networking:
-  dnsDomain: cluster.local
+  dnsDomain: k8s.mill.growse.com
   serviceSubnet: "fd5a:1111:1111::/112,10.96.0.0/12"
   podSubnet: "fd5a:5555:5555::/48,10.244.0.0/16"
-scheduler: {}
+scheduler:
+  extraArgs:
+    feature-gates: "EphemeralContainers=true"
 ---
 apiVersion: kubelet.config.k8s.io/v1beta1
 kind: KubeletConfiguration
