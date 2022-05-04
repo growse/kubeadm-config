@@ -1,69 +1,71 @@
----
-apiVersion: kubeadm.k8s.io/v1beta2
+apiVersion: kubeadm.k8s.io/v1beta3
+bootstrapTokens:
+- groups:
+  - system:bootstrappers:kubeadm:default-node-token
+  token: ce9xi2.at00ce4sm4p8ohuh
+  ttl: 24h0m0s
+  usages:
+  - signing
+  - authentication
 kind: InitConfiguration
-nodeRegistration:
-  criSocket: /run/containerd/containerd.sock
 localAPIEndpoint:
-  advertiseAddress: "2001:8b0:c8f:e8b0::9"
+  advertiseAddress: 2001:8b0:c8f:e8b0::9
+  bindPort: 6443
+nodeRegistration:
+  criSocket: unix:///run/containerd/containerd.sock
+  imagePullPolicy: IfNotPresent
+  name: serverbot
+  taints:
+  - effect: NoSchedule
+    key: node-role.kubernetes.io/master
+  - effect: NoSchedule
+    key: node-role.kubernetes.io/control-plane
 ---
-kind: ClusterConfiguration
-kubernetesVersion: v1.22.0
 apiServer:
   certSANs:
-  - "fd5a:1111:1111::1"
-  - "2001:8b0:c8f:e8b0::9" 
-  - "192.168.2.9"
-  - "api.k8s.mill.growse.com"
+  - fd5a:1111:1111::1
+  - 2001:8b0:c8f:e8b0::9
+  - 192.168.2.9
+  - api.k8s.mill.growse.com
   extraArgs:
     authorization-mode: Node,RBAC
-    oidc-issuer-url: https://accounts.google.com
+    feature-gates: EphemeralContainers=true
     oidc-client-id: 887447903183-k5d26153v3mamhhltubamchd1snalfqa.apps.googleusercontent.com
+    oidc-issuer-url: https://accounts.google.com
     oidc-username-claim: email
-    feature-gates: "IPv6DualStack=true,EphemeralContainers=true"
   timeoutForControlPlane: 4m0s
-apiVersion: kubeadm.k8s.io/v1beta2
+apiVersion: kubeadm.k8s.io/v1beta3
 certificatesDir: /etc/kubernetes/pki
 clusterName: kubernetes
 controllerManager:
   extraArgs:
-    controllers: "*,bootstrapsigner,tokencleaner,-nodeipam"
-    feature-gates: "EphemeralContainers=true"
-dns:
-  type: CoreDNS
+    controllers: '*,bootstrapsigner,tokencleaner,-nodeipam'
+    feature-gates: EphemeralContainers=true
+dns: {}
 etcd:
   local:
-    serverCertSANs:
-    - "etcd.k8s.growse.com"
-    - "2001:8b0:c8f:e8b0::9"
     dataDir: /var/lib/etcd
     extraArgs:
       advertise-client-urls: https://[2001:8b0:c8f:e8b0::9]:2379
-      initial-cluster: serverbot=https://[2001:8b0:c8f:e8b0::9]:2380
       initial-advertise-peer-urls: https://[2001:8b0:c8f:e8b0::9]:2380
+      initial-cluster: serverbot=https://[2001:8b0:c8f:e8b0::9]:2380
       listen-client-urls: https://[::1]:2379,https://[2001:8b0:c8f:e8b0::9]:2379
       listen-metrics-urls: http://[::1]:2381
-      listen-peer-urls: https://[2001:8b0:c8f:e8b0::9]:2380      
-
-featureGates:
-  IPv6DualStack: true
+      listen-peer-urls: https://[2001:8b0:c8f:e8b0::9]:2380
+    serverCertSANs:
+    - etcd.k8s.growse.com
+    - 2001:8b0:c8f:e8b0::9
 imageRepository: k8s.gcr.io
+kind: ClusterConfiguration
+kubernetesVersion: v1.23.5
 networking:
   dnsDomain: k8s.mill.growse.com
-  serviceSubnet: "fd5a:1111:1111::/112,10.96.0.0/12"
-  podSubnet: "fd5a:5555:5555::/48,10.244.0.0/16"
+  podSubnet: fd5a:5555:5555::/48,10.244.0.0/16
+  serviceSubnet: fd5a:1111:1111::/112,10.96.0.0/12
 scheduler:
   extraArgs:
-    feature-gates: "EphemeralContainers=true"
+    feature-gates: EphemeralContainers=true
 ---
 apiVersion: kubelet.config.k8s.io/v1beta1
 kind: KubeletConfiguration
-address: "::"
-cgroupDriver: "systemd"
-clusterDomain: "k8s.mill.growse.com"
 serverTLSBootstrap: true
----
-apiVersion: kubeproxy.config.k8s.io/v1alpha1
-kind: KubeProxyConfiguration
-mode: "ipvs"
-ipvs:
-  strictARP: true
