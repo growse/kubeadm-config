@@ -29,8 +29,8 @@ apiServer:
   - api.k8s.mill.growse.com
   extraArgs:
     authorization-mode: Node,RBAC
-    feature-gates: EphemeralContainers=true
-    oidc-client-id: 887447903183-k5d26153v3mamhhltubamchd1snalfqa.apps.googleusercontent.com
+    feature-gates: ""
+    oidc-client-id: 887447903183-ff1kfifdfbniao4q69fdup4fqorkpsrt.apps.googleusercontent.com
     oidc-issuer-url: https://accounts.google.com
     oidc-username-claim: email
   timeoutForControlPlane: 4m0s
@@ -40,7 +40,7 @@ clusterName: kubernetes
 controllerManager:
   extraArgs:
     controllers: '*,bootstrapsigner,tokencleaner,-nodeipam'
-    feature-gates: EphemeralContainers=true
+    feature-gates: ""
 dns: {}
 etcd:
   local:
@@ -55,16 +55,15 @@ etcd:
     serverCertSANs:
     - etcd.k8s.growse.com
     - 2001:8b0:c8f:e8b0::9
-imageRepository: k8s.gcr.io
+      #imageRepository: k8s.gcr.io
 kind: ClusterConfiguration
-kubernetesVersion: v1.23.5
 networking:
   dnsDomain: k8s.mill.growse.com
   podSubnet: fd5a:5555:5555::/48,10.244.0.0/16
   serviceSubnet: fd5a:1111:1111::/112,10.96.0.0/12
 scheduler:
   extraArgs:
-    feature-gates: EphemeralContainers=true
+    feature-gates: ""
 ---
 apiVersion: kubelet.config.k8s.io/v1beta1
 kind: KubeletConfiguration
