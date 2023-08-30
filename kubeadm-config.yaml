@@ -47,6 +47,7 @@ controllerManager:
     controllers: '*,bootstrapsigner,tokencleaner,-nodeipam'
     feature-gates: ""
     bind-address: "::1"
+    cluster-signing-duration: "720h0m0s"
 dns: {}
 etcd:
   local:
@@ -70,3 +71,4 @@ scheduler:
 apiVersion: kubelet.config.k8s.io/v1beta1
 kind: KubeletConfiguration
 serverTLSBootstrap: true
+imageGCLowThresholdPercent: 60
