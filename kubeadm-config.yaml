@@ -71,5 +71,6 @@ scheduler:
 apiVersion: kubelet.config.k8s.io/v1beta1
 kind: KubeletConfiguration
 serverTLSBootstrap: true
-imageGCLowThresholdPercent: 60
+imageGCLowThresholdPercent: 40
+imageGCHighThresholdPercent: 65
 rotateCertificates: true
