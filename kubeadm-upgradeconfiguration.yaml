@@ -1,0 +1,10 @@
+---
+apiVersion: kubeadm.k8s.io/v1beta4
+kind: UpgradeConfiguration
+apply:
+  kubernetesVersion: 1.30.0
+  patches: 
+    directory: /home/growse/kubeadm-config/patches
+node:
+  patches:
+    directory: /home/growse/kubeadm-config/patches

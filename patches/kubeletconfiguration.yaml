@@ -1,0 +1,4 @@
+---
+containerRuntimeEndpoint: unix:///var/run/containerd/containerd.sock
+featureGates:
+  MemoryQoS: true
