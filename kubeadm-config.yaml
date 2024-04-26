@@ -21,13 +21,6 @@ nodeRegistration:
   - effect: NoSchedule
     key: node-role.kubernetes.io/control-plane
 ---
-apiVersion: kubeadm.k8s.io/v1beta3
-kind: ClusterConfiguration
-clusterName: kubernetes
-networking:
-  dnsDomain: k8s.mill.growse.com
-  podSubnet: fd5a:5555:5555::/48,10.244.0.0/16
-  serviceSubnet: fd5a:1111:1111::/112,10.96.0.0/12
 apiServer:
   certSANs:
   - fd5a:1111:1111::1
@@ -40,14 +33,15 @@ apiServer:
     oidc-client-id: 887447903183-ff1kfifdfbniao4q69fdup4fqorkpsrt.apps.googleusercontent.com
     oidc-issuer-url: https://accounts.google.com
     oidc-username-claim: email
-  timeoutForControlPlane: 4m0s
+apiVersion: kubeadm.k8s.io/v1beta3
 certificatesDir: /etc/kubernetes/pki
+clusterName: kubernetes
 controllerManager:
   extraArgs:
+    bind-address: ::1
+    cluster-signing-duration: 720h0m0s
     controllers: '*,bootstrapsigner,tokencleaner,-nodeipam'
     feature-gates: ""
-    bind-address: "::1"
-    cluster-signing-duration: "720h0m0s"
 dns: {}
 etcd:
   local:
@@ -62,15 +56,14 @@ etcd:
     serverCertSANs:
     - etcd.k8s.growse.com
     - 2001:8b0:c8f:e8b0::9
-      #imageRepository: k8s.gcr.io
+imageRepository: registry.k8s.io
+kind: ClusterConfiguration
+kubernetesVersion: v1.30.0
+networking:
+  dnsDomain: k8s.mill.growse.com
+  podSubnet: fd5a:5555:5555::/48,10.244.0.0/16
+  serviceSubnet: fd5a:1111:1111::/112,10.96.0.0/12
 scheduler:
   extraArgs:
-    bind-address: "::1"
+    bind-address: ::1
     feature-gates: ""
----
-apiVersion: kubelet.config.k8s.io/v1beta1
-kind: KubeletConfiguration
-serverTLSBootstrap: true
-imageGCLowThresholdPercent: 40
-imageGCHighThresholdPercent: 65
-rotateCertificates: true
