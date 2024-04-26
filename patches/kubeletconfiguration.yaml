@@ -2,3 +2,7 @@
 containerRuntimeEndpoint: unix:///var/run/containerd/containerd.sock
 featureGates:
   MemoryQoS: true
+serverTLSBootstrap: true
+imageGCLowThresholdPercent: 40
+imageGCHighThresholdPercent: 65
+rotateCertificates: true
