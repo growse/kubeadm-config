@@ -1,0 +1,6 @@
+---
+extraArgs:
+  bind-address: "::"
+  cluster-signing-duration: 720h0m0s
+  controllers: '*,bootstrapsigner,tokencleaner,-nodeipam'
+  feature-gates: ""

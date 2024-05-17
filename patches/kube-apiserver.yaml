@@ -1,0 +1,12 @@
+---
+certSANs:
+- fd5a:1111:1111::1
+- 2001:8b0:c8f:e8b0::9
+- api.k8s.mill.growse.com
+- kubernetes.default.svc
+extraArgs:
+  authorization-mode: Node,RBAC
+  feature-gates: ""
+  oidc-client-id: 887447903183-ff1kfifdfbniao4q69fdup4fqorkpsrt.apps.googleusercontent.com
+  oidc-issuer-url: https://accounts.google.com
+  oidc-username-claim: email

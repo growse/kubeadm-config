@@ -36,26 +36,10 @@ apiServer:
 apiVersion: kubeadm.k8s.io/v1beta3
 certificatesDir: /etc/kubernetes/pki
 clusterName: kubernetes
-controllerManager:
-  extraArgs:
-    bind-address: ::1
-    cluster-signing-duration: 720h0m0s
-    controllers: '*,bootstrapsigner,tokencleaner,-nodeipam'
-    feature-gates: ""
+
 dns: {}
 etcd:
-  local:
-    dataDir: /var/lib/etcd
-    extraArgs:
-      advertise-client-urls: https://[2001:8b0:c8f:e8b0::9]:2379
-      initial-advertise-peer-urls: https://[2001:8b0:c8f:e8b0::9]:2380
-      initial-cluster: serverbot=https://[2001:8b0:c8f:e8b0::9]:2380
-      listen-client-urls: https://[::1]:2379,https://[2001:8b0:c8f:e8b0::9]:2379
-      listen-metrics-urls: http://[::1]:2381
-      listen-peer-urls: https://[2001:8b0:c8f:e8b0::9]:2380
-    serverCertSANs:
-    - etcd.k8s.growse.com
-    - 2001:8b0:c8f:e8b0::9
+  
 imageRepository: registry.k8s.io
 kind: ClusterConfiguration
 kubernetesVersion: v1.30.0
