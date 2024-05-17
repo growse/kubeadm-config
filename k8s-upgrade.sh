@@ -22,13 +22,13 @@ echo "Upgrading version from ${OLD_VERSION} to ${VERSION}"
 
 sed -i 's/'"${OLD_VERSION}"'/'"${VERSION}"'/g' /etc/apt/preferences.d/kubernetes
 
-apt-get install -y kubeadm
+apt-get install kubeadm
 
 # Check if kube-apiserver process is running
 if pgrep -x "kube-apiserver" > /dev/null; then
-	kubeadm config images pull
+	kubeadm config images pull --kubernetes-version ${VERSION}
 	echo "This host is a Kubernetes control-plane node."
-	kubeadm --config /home/growse/kubeadm-config/kubeadm-upgradeconfiguration.yaml upgrade plan
+	kubeadm upgrade plan --print-config ${VERSION}
 	echo -e "\n"
 
 	read -n 1 -r -p "Shall we apply the upgrade to ${VERSION}? [y/n]: " continue
@@ -37,11 +37,11 @@ if pgrep -x "kube-apiserver" > /dev/null; then
 		exit 2
 	fi
 
-	kubeadm --config /home/growse/kubeadm-config/kubeadm-upgradeconfiguration.yaml upgrade apply -y
+	kubeadm upgrade apply --print-config -y ${VERSION}
 
 else
 	echo "This host is not a Kubernetes control-plane node."
-	kubeadm upgrade node --config /home/growse/kubeadm-config/kubeadm-upgradeconfiguration.yaml
+	kubeadm upgrade node
 fi
 
 apt-get install -y kubectl kubelet

@@ -1,5 +1,7 @@
 # Some notes and handy `kubeadm` commands
 
+_Important_: Configuration is mastered in the configmaps on the server. Don't try and mess around with local configs / patches, that's for a per-node config
+
 ## Get a node join token
 
 `kubeadm token create --print-join-command --config kubeadm-config.yaml`
