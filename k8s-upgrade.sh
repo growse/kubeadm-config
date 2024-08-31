@@ -2,8 +2,7 @@
 
 set +x
 
-OLD_VERSION=$1
-VERSION=$2
+VERSION=$1
 
 if (( EUID != 0 )); then
 	echo "You must be root to do this." 1>&2
@@ -14,15 +13,14 @@ if [ -z "${VERSION}" ]; then
 	echo "No version supplied" 1>&2
 	exit 1
 fi
-if [ -z "${OLD_VERSION}" ]; then
-	echo "No version supplied" 1>&2
-	exit 1
-fi
-echo "Upgrading version from ${OLD_VERSION} to ${VERSION}"
+echo "Upgrading to ${VERSION}"
 
-sed -i 's/'"${OLD_VERSION}"'/'"${VERSION}"'/g' /etc/apt/preferences.d/kubernetes
+echo "Target major version = ${VERSION%.*}"
 
-apt-get install kubeadm
+sed -i -E 's/pkgs.k8s.io\/core:\/stable:\/v[0-9].[0-9]{2}\/deb/pkgs.k8s.io\/core:\/stable:\/v'"${VERSION%.*}"'\/deb/g' /etc/apt/sources.list.d/kubernetes.list
+sed -i -E 's/Pin: version [0-9].[0-9]{2}.[0-9]/Pin: version '"${VERSION}"'/g' /etc/apt/preferences.d/kubernetes
+
+apt-get update && apt-get install kubeadm
 
 # Check if kube-apiserver process is running
 if pgrep -x "kube-apiserver" > /dev/null; then
