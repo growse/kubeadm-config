@@ -13,11 +13,18 @@ if [ -z "${VERSION}" ]; then
 	echo "No version supplied" 1>&2
 	exit 1
 fi
+
+VERSION_PATTERN="^[0-9]+\.[0-9]+\.[0-9]+$"
+if ! [[ "${VERSION}" =~ ${VERSION_PATTERN} ]]; then
+	echo "Invalid version ${VERSION}" 1>&2
+	exit 1
+fi
+
 echo "Upgrading to ${VERSION}"
 
 echo "Target major version = ${VERSION%.*}"
 
-sed -i -E 's/pkgs.k8s.io\/core:\/stable:\/v[0-9].[0-9]{2}\/deb/pkgs.k8s.io\/core:\/stable:\/v'"${VERSION%.*}"'\/deb/g' /etc/apt/sources.list.d/kubernetes.list
+sed -i -E 's/pkgs.k8s.io\/core:\/stable:\/v[0-9].[0-9]{2}\/deb/pkgs.k8s.io\/core:\/stable:\/v'"${VERSION%.*}"'\/deb/g' /etc/apt/sources.list.d/kubernetes.sources
 sed -i -E 's/Pin: version [0-9].[0-9]{2}.[0-9]/Pin: version '"${VERSION}"'/g' /etc/apt/preferences.d/kubernetes
 
 apt-get update && apt-get install kubeadm
