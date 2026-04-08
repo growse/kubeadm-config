@@ -4,9 +4,11 @@ kubernetesVersion: v1.33.3
 apiServer:
   certSANs:
       - "api.k8s.mill.growse.com"
+      - "api.k8s.hq.growse.com"
       - "localhost"
       - "serverbot"
       - "serverbot.mill.growse.com"
+      - "serverbot.hq.growse.com"
       - "2001:8b0:c8f:e8b0::9"
       - "kubernetes"
       - "kubernetes.default.svc"
@@ -17,9 +19,11 @@ etcd:
       - "localhost"
       - "serverbot"
       - "serverbot.mill.growse.com"
+      - "serverbot.hq.growse.com"
       - "2001:8b0:c8f:e8b0::9"
     peerCertSANs:
       - "localhost"
       - "serverbot"
       - "serverbot.mill.growse.com"
+      - "serverbot.hq.growse.com"
       - "2001:8b0:c8f:e8b0::9"
